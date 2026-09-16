@@ -69,14 +69,14 @@ async def send_request(encrypted_uid, token, url):
     try:
         edata = bytes.fromhex(encrypted_uid)
         headers = {
-            "User-Agent": "Dalvik/2.1.0 (Linux; U; Android 9; ASUS_Z01QD Build/PI)",
+            "User-Agent": "UnityPlayer/2018.4.12f1 (UnityWebRequest/1.0, libcurl/8.5.0-DEV)",
             "Connection": "Keep-Alive",
-            "Accept-Encoding": "gzip",
+            "Accept-Encoding": "deflate, gzip",
             "Authorization": f"Bearer {token}",
             "Content-Type": "application/x-www-form-urlencoded",
-            "Expect": "100-continue",
             "X-Unity-Version": "2018.4.12f1",
             "X-GA": "v1 1",
+            "X-GA-SV": "1789580233",
             "ReleaseVersion": "OB55"
         }
         async with aiohttp.ClientSession() as session:
@@ -137,14 +137,14 @@ def make_request(encrypt, region, token):
             url = "https://clientbp.ggpolarbear.com/GetPlayerPersonalShow"
         edata = bytes.fromhex(encrypt)
         headers = {
-            "User-Agent": "Dalvik/2.1.0 (Linux; U; Android 9; ASUS_Z01QD Build/PI)",
+            "User-Agent": "UnityPlayer/2018.4.12f1 (UnityWebRequest/1.0, libcurl/8.5.0-DEV)",
             "Connection": "Keep-Alive",
-            "Accept-Encoding": "gzip",
+            "Accept-Encoding": "deflate, gzip",
             "Authorization": f"Bearer {token}",
             "Content-Type": "application/x-www-form-urlencoded",
-            "Expect": "100-continue",
-            "X-Unity-Version": "2018.4.11f1",
+            "X-Unity-Version": "2018.4.12f1",
             "X-GA": "v1 1",
+            "X-GA-SV": "1789580231",
             "ReleaseVersion": "OB55"
         }
         response = requests.post(url, data=edata, headers=headers, verify=False)
@@ -162,7 +162,7 @@ def make_request(encrypt, region, token):
 
 @app.route('/like', methods=['GET'])
 def handle_requests():
-    global used_count  # ✅ fix added
+    global used_count
 
     # ✅ API key check
     api_key = request.args.get("key")
@@ -184,7 +184,7 @@ def handle_requests():
 
     try:
         def process_request():
-            global used_count  # ✅ fix added again (for nested function)
+            global used_count
 
             tokens = load_tokens(region)
             if not tokens:
@@ -214,7 +214,6 @@ def handle_requests():
             like_given = after_like - before_like
             status = 1 if like_given > 0 else 2
 
-            # ✅ Count only when successful (status == 1)
             if status == 1:
                 used_count += 1
 
@@ -247,10 +246,9 @@ def handle_requests():
         return {"error": str(e)}, 500
 
 
-# 🆕 /remain endpoint
 @app.route('/remain', methods=['GET'])
 def remain_info():
-    global used_count  # ✅ fix added
+    global used_count
 
     remaining = max(daily_limit - used_count, 0)
     data = {
