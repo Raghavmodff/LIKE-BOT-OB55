@@ -75,7 +75,7 @@ async def send_request(encrypted_uid, token, url):
             "Authorization": f"Bearer {token}",
             "Content-Type": "application/x-www-form-urlencoded",
             "Expect": "100-continue",
-            "X-Unity-Version": "2018.4.11f1",
+            "X-Unity-Version": "2018.4.12f1",
             "X-GA": "v1 1",
             "ReleaseVersion": "OB55"
         }
